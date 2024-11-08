@@ -14,7 +14,7 @@ spec:
    spec: 
      containers:
      - name: conversao-distancia
-       image: douginfodev/conversao-distancia:v1
+       image: douginfodev/conversao-distancia:latest
        ports: 
         - containerPort: 5000
 ---
