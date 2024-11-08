@@ -24,7 +24,7 @@ jobs:
           context: ./src
           push: true
           file: ./src/Dockerfile
-        tags: |
-          douginfodev/fake-shop:latest
-          douginfodev/fake-shop:v${{ github.run_number }}
+          tags: |
+            douginfodev/fake-shop:latest
+            douginfodev/fake-shop:v${{ github.run_number }}
  
