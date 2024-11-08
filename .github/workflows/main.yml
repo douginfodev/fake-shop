@@ -18,18 +18,41 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         
-      - name: Construcao da Imagem Docker
-        run: echo  "Executando o comando Docker Build"
-      - name: Envio da Imagem Docker
-        run: echo  "Executando o comando Docker push"
-
-  cd:
-    runs-on: ubuntu-latest
+      - name: Construção e envio da imagem Docker
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          file: ./src/Dockerfile
+        tags: |
+          douginfodev/fake-shop:latest
+          douginfodev/fake-shop:v${{ github.run_number }}
+          
+   cd:
+    run ons: ubuntu-latest
     needs: [ci]
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
     steps:
+      - name: Obter o codigo do projeto
+        uses: actions/checkout@v4
+      
       - name: Autenticar na AWS
-        run: echo  "Executando o comando aws configure"
+        uses: aws_action/onfigure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}    
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1    
+       
       - name: Configurar o kubectl
-        run: echo  "Executando o comando aws eks update-kubeconfig"
-      - name: Deploy dos nabifestos do Kubernet
-        run: echo  "Executando o comando kuberctl aplly"      
+        run: aws eks update-kubeconfig -name eks-aula
+
+      - name: Deploy dos manifestos no Kubernetes
+        uses: Azure/k8s-deploy@v5
+        with:
+          manifests: |
+            ./k8s/deployment.yaml
+          images: |
+            douginfodev/fake-shop:v${{ github.run_number }}
