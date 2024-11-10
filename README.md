@@ -23,5 +23,5 @@
 
  <figure>
   <img src="./src/grafana/dashboarddoug.jpg" alt="Fake SHop Doug Site Dashboard">
-  <figcaption>Kubernets com todos os nos e as replicas</figcaption>
+  <figcaption>Dashboard do site Fake Shop Doug</figcaption>
 </figure>
